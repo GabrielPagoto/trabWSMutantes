@@ -25,18 +25,13 @@ public class LoginActivity extends AppCompatActivity {
     public void acessarAplicativo(View view){
         login = findViewById(R.id.login);
         senha = findViewById(R.id.senha);
-        System.out.println("LOGIN: " + login.getText().toString());
-        System.out.println("SENHA: " + senha.getText().toString());
 
-        if (login.getText().toString() != null && senha.getText().toString() != null){
-            System.out.println("ACESSOU 1");
-
-            /*Intent it = new Intent(LoginActivity.this,DashboardActivity.class);
+        if (!login.getText().toString().isEmpty() && !senha.getText().toString().isEmpty()){
+            Intent it = new Intent(LoginActivity.this,DashboardActivity.class);
             startActivity(it);
-            finish();*/
+            finish();
         }
         else {
-            System.out.println("ACESSOU 2");
             AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
             selecionaFoto.setTitle("Atenção !!");
             selecionaFoto.setMessage("Todos os dados devem ser informados.");
@@ -47,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
             selecionaFoto.create().show();
-
         }
 
 
