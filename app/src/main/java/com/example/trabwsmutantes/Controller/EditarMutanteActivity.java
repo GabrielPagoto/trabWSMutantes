@@ -33,7 +33,7 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
     TextView habilidade3;
     EditText imgTitle;
     Intent intent = getIntent();
-    private  static final int IMAGE = 100;
+    private static final int IMAGE = 100;
     Mutante mutante;
 
     @Override
@@ -54,25 +54,25 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         habilidade3.setText(mutante.getHabilidade3());
     }
 
-    public void realizarAlteracao(View view){
+    public void realizarAlteracao(View view) {
         img = findViewById(R.id.imageMutante);
         nome = findViewById(R.id.nomeMutante);
         habilidade1 = findViewById(R.id.habilidade1Mutante);
         habilidade2 = findViewById(R.id.habilidade2Mutante);
         habilidade3 = findViewById(R.id.habilidade3Mutante);
 
-        if (img.toString() != null && nome.getText().toString() != null && habilidade1.getText().toString() != null){
+        if (img.toString() != null && nome.getText().toString() != null && habilidade1.getText().toString() != null) {
             Mutante mutanteNovo = new Mutante();
             //CORRIGIR mutanteNovo.setImg(Integer.parseInt(img.toString()));
             mutanteNovo.setNome(nome.getText().toString());
             mutanteNovo.setHabilidade1(habilidade1.getText().toString());
-            if(habilidade2.getText().toString() != null){
+            if (habilidade2.getText().toString() != null) {
                 mutanteNovo.setHabilidade2(habilidade2.getText().toString());
             }
-            if(habilidade3.getText().toString() != null){
+            if (habilidade3.getText().toString() != null) {
                 mutanteNovo.setHabilidade3(habilidade3.getText().toString());
             }
-            Intent intent = new Intent(EditarMutanteActivity.this,DetalheMutanteActivity.class);
+            Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
             Bundle params = new Bundle();
             params.putString("nome", "object");
             intent.putExtras(params);
@@ -84,8 +84,8 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
 
     }
 
-    public void voltar(View view){
-        Intent it = new Intent(EditarMutanteActivity.this,DetalheMutanteActivity.class);
+    public void voltar(View view) {
+        Intent it = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
         Bundle paramBack = new Bundle();
         paramBack.putString("nome", mutante.getNome());
         it.putExtras(paramBack);
@@ -100,15 +100,14 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         startActivityForResult(intent, IMAGE);
     }
 
-    private String convertToString()
-    {
+    private String convertToString() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] imgByte = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        return Base64.encodeToString(imgByte, Base64.DEFAULT);
     }
 
-    private void uploadImage(){
+    private void uploadImage() {
 
         String image = convertToString();
         String imageName = imgTitle.getText().toString();
@@ -120,18 +119,17 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
             public void onResponse(Call<Mutante> call, Response<Mutante> response) {
 
                 Mutante img_pojo = response.body();
-                Log.d("Server Response",""+img_pojo);
+                Log.d("Server Response", "" + img_pojo);
 
             }
 
             @Override
             public void onFailure(Call<Mutante> call, Throwable t) {
-                Log.d("Server Response",""+t.toString());
+                Log.d("Server Response", "" + t.toString());
 
             }
         });
 
     }
 
-}
 }
