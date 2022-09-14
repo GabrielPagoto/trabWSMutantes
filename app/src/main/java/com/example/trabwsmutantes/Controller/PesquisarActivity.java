@@ -39,12 +39,12 @@ public class PesquisarActivity extends AppCompatActivity implements Serializable
     }
 
     private void createMutante() {
-        Mutante obj = new Mutante(R.drawable.img,"Teste 1", "Teste 1");
+       /* Mutante obj = new Mutante(R.drawable.img,"Teste 1", "Teste 1");
         mutanteList.add(obj);
         obj = new Mutante(R.drawable.ic_kablam_super_hero_flame,"Teste 2", "Teste 2");
         mutanteList.add(obj);
         obj = new Mutante(R.drawable.ic_launcher_background,"Teste 3", "Teste 3");
-        mutanteList.add(obj);
+        mutanteList.add(obj);*/
     }
 
     public void voltar(View view){

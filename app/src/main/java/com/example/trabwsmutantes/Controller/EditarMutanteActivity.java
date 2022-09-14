@@ -3,23 +3,37 @@ package com.example.trabwsmutantes.Controller;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.trabwsmutantes.ApiMutants.MutantsService;
+import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditarMutanteActivity extends AppCompatActivity implements Serializable {
     ImageView img;
     TextView nome;
+    Bitmap bitmap;
     TextView habilidade1;
     TextView habilidade2;
     TextView habilidade3;
+    EditText imgTitle;
     Intent intent = getIntent();
+    private  static final int IMAGE = 100;
     Mutante mutante;
 
     @Override
@@ -33,7 +47,7 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         habilidade3 = findViewById(R.id.habilidade3Mutante);
 
         mutante = (Mutante) getIntent().getSerializableExtra("mutante");
-        img.setImageResource(mutante.getImg());
+        //img.setImageResource(mutante.getImg());
         nome.setText(mutante.getNome());
         habilidade1.setText(mutante.getHabilidade1());
         habilidade2.setText(mutante.getHabilidade2());
@@ -78,4 +92,46 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         startActivity(it);
         finish();
     }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE);
+    }
+
+    private String convertToString()
+    {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        byte[] imgByte = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+    }
+
+    private void uploadImage(){
+
+        String image = convertToString();
+        String imageName = imgTitle.getText().toString();
+
+        Call<Mutante> call = new RetrofitConfig().getMutantService().getMutante();
+
+        call.enqueue(new Callback<Mutante>() {
+            @Override
+            public void onResponse(Call<Mutante> call, Response<Mutante> response) {
+
+                Mutante img_pojo = response.body();
+                Log.d("Server Response",""+img_pojo);
+
+            }
+
+            @Override
+            public void onFailure(Call<Mutante> call, Throwable t) {
+                Log.d("Server Response",""+t.toString());
+
+            }
+        });
+
+    }
+
+}
 }

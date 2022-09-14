@@ -43,7 +43,7 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
 
                 switch (sNome) {
                     case "Teste 1":
-                        mutante = new Mutante(R.drawable.img, sNome, "Habilidade 1");
+                        mutante = new Mutante("", sNome, "Habilidade 1");
                         img.setImageResource(R.drawable.img);
                         nome.setText(mutante.getNome());
                         habilidade1.setText("Habilidade 1");
@@ -70,7 +70,7 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                     case "object":
                         mutante = (Mutante) getIntent().getSerializableExtra("mutante");
                         nome.setText(mutante.getNome());
-                        img.setImageResource(mutante.getImg());
+                        //img.setImageResource(mutante.getImg());
                         habilidade1.setText(mutante.getHabilidade1());
                         habilidade2.setText(mutante.getHabilidade2());
                         habilidade3.setText(mutante.getHabilidade3());

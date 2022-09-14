@@ -6,26 +6,26 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Mutante extends Activity implements Serializable {
-    private int img;
+    private String img;
     private String nome;
     private String habilidade1;
     private String habilidade2;
     private String habilidade3;
 
-    public Mutante(int img, String nome, String habilidade1) {
+    public Mutante(String img, String nome, String habilidade1) {
         this.img = img;
         this.nome = nome;
         this.habilidade1 = habilidade1;
     }
 
-    public Mutante(int img, String nome, String habilidade1, String habilidade2) {
+    public Mutante(int String, String nome, String habilidade1, String habilidade2) {
         this.img = img;
         this.nome = nome;
         this.habilidade1 = habilidade1;
         this.habilidade2 = habilidade2;
     }
 
-    public Mutante(int img, String nome, String habilidade1, String habilidade2, String habilidade3) {
+    public Mutante(int String, String nome, String habilidade1, String habilidade2, String habilidade3) {
         this.img = img;
         this.nome = nome;
         this.habilidade1 = habilidade1;
@@ -37,11 +37,11 @@ public class Mutante extends Activity implements Serializable {
 
     }
 
-    public int getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 

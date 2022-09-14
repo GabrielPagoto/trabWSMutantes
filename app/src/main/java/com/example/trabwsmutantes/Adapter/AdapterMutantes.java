@@ -44,7 +44,7 @@ public class AdapterMutantes extends RecyclerView.Adapter<AdapterMutantes.MyView
     public void onBindViewHolder(@NonNull AdapterMutantes.MyViewHolder holder, int position) {
         Mutante obj = mutanteList.get(position);
         holder.name.setText(obj.getNome());
-        holder.img.setImageResource(obj.getImg());
+        //.img.setImageResource(obj.getImg());
     }
 
     @Override

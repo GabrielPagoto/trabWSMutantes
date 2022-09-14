@@ -6,10 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
+import com.example.trabwsmutantes.Model.User;
 import com.example.trabwsmutantes.R;
+
+import java.io.Console;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     EditText login;
@@ -28,8 +37,48 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!login.getText().toString().isEmpty() && !senha.getText().toString().isEmpty()){
             Intent it = new Intent(LoginActivity.this,DashboardActivity.class);
-            startActivity(it);
-            finish();
+            Call<User> call = new RetrofitConfig().getLoginService().getUser(login.getText().toString(),senha.getText().toString());
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if(response.code() == 204)
+                    {
+                            AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
+                            selecionaFoto.setTitle("Atenção !!");
+                            selecionaFoto.setMessage("Senha ou email incorretos");
+                            selecionaFoto.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            selecionaFoto.create().show();
+                    }
+                    else if(response.code() == 200){
+                        startActivity(it);
+                        finish();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
+                        selecionaFoto.setTitle("Erro !!");
+                        selecionaFoto.setMessage("Erro interno, tente novamente mais tarde");
+                        selecionaFoto.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        selecionaFoto.create().show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.e("erro", t.getMessage());
+                }
+            });
         }
         else {
             AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
