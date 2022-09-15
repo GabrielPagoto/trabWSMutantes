@@ -22,7 +22,7 @@ import java.util.List;
 
 public class AdapterMutantes extends RecyclerView.Adapter<AdapterMutantes.MyViewHolder> implements Serializable {
     private List<Mutant> mutanteList;
-    static String url = "https://7a3b-2804-7f4-378e-dc86-a49f-d767-d316-473c.sa.ngrok.io/";
+    static String url = "https://08b1-2804-7f4-378e-dc86-ed30-ec7c-e28e-1505.sa.ngrok.io/";
     public  AdapterMutantes(List<Mutant> list){
         mutanteList = list;
     }
@@ -65,7 +65,7 @@ public class AdapterMutantes extends RecyclerView.Adapter<AdapterMutantes.MyView
         }
     }
 
-    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+    public static class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
         public DownloadImageFromInternet(ImageView imageView) {
             this.imageView=imageView;

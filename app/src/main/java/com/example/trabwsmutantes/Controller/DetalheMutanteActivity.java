@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trabwsmutantes.Adapter.AdapterMutantes;
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
+import java.io.InputStream;
 import java.io.Serializable;
 
 import retrofit2.Call;
@@ -28,7 +31,7 @@ import retrofit2.Response;
 
 public class DetalheMutanteActivity extends AppCompatActivity implements Serializable {
     Mutante mutante;
-    static String url = "https://7a3b-2804-7f4-378e-dc86-a49f-d767-d316-473c.sa.ngrok.io/";
+    static String url = "https://08b1-2804-7f4-378e-dc86-ed30-ec7c-e28e-1505.sa.ngrok.io/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +71,21 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                             String nomeC = sharedPref.getString("email", "");
                             Mutant mutant = response.body();
                             nome.setText(mutant.getName());
+                            System.out.println("HAB1: "+ mutant.getAbilits().get(0));
+                            System.out.println("HAB2: "+ mutant.getAbilits().get(1));
+                            System.out.println("HAB3: "+ mutant.getAbilits().get(2));
                             habilidade1.setText(mutant.getAbilits().get(0));
-                            if (mutant.getAbilits().size() == 2) {
-                                habilidade2.setText(mutant.getAbilits().get(1));
+                            if (mutant.getAbilits().size() >= 2) {
+                                habilidade2.setText(mutant.getAbilits().get(2));
                             }
                             if (mutant.getAbilits().size() == 3) {
-                                habilidade3.setText(mutant.getAbilits().get(2));
+                                habilidade3.setText(mutant.getAbilits().get(1));
                             }
                             nomeCriador.setText(nomeC);
                             Bundle bundle = getIntent().getExtras();
                             if (bundle != null) {
                                 try {
-                                    byte[] imageInByte = bundle.getByteArray("bitmap");
-                                    Bitmap bmp = BitmapFactory.decodeByteArray(imageInByte, 0, imageInByte.length);
-                                    img.setImageBitmap(bmp);
+                                    new AdapterMutantes.DownloadImageFromInternet((ImageView) img).execute(url+mutant.getPhoto());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -106,6 +110,28 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                     }
                 });
             }
+        }
+    }
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage=BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
         }
     }
 
