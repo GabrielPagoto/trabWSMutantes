@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -74,6 +76,16 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                                 habilidade3.setText(mutant.getAbilits().get(2));
                             }
                             nomeCriador.setText(nomeC);
+                            Bundle bundle = getIntent().getExtras();
+                            if (bundle != null) {
+                                try {
+                                    byte[] imageInByte = bundle.getByteArray("bitmap");
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(imageInByte, 0, imageInByte.length);
+                                    img.setImageBitmap(bmp);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         } else {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetalheMutanteActivity.this);
                             alertDialog.setTitle("Erro !!");

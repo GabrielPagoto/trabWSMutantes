@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -109,6 +110,11 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
         TextView idMutante = view.findViewById(R.id.idMutante);
 
         Intent it = new Intent(this, DetalheMutanteActivity.class);
+        img.buildDrawingCache(true);
+        Bitmap bitmap = img.getDrawingCache(true);
+        it.putExtra("bitmap", bitmap);
+
+
         Bundle params = new Bundle();
         params.putInt("id", Integer.parseInt(idMutante.getText().toString()));
         it.putExtras(params);
