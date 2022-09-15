@@ -1,23 +1,33 @@
 package com.example.trabwsmutantes.Controller;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.trabwsmutantes.Adapter.AdapterMutantes;
+import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListarTodosActivity extends AppCompatActivity implements Serializable {
     private RecyclerView listagemMutantes;
@@ -35,7 +45,7 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         int idLogado = sharedPref.getInt("id", 0);
-        /*Call<List<Mutant>> call = new RetrofitConfig().getMutantService().getListMutants(idLogado);
+        Call<List<Mutant>> call = new RetrofitConfig().getMutantService().getMutantList(idLogado);
         call.enqueue(new Callback<List<Mutant>>() {
 
             @Override
@@ -82,9 +92,6 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
                 Log.e("erro", t.getMessage());
             }
         });
-
-
-*/
     }
 
     private void createMutante() {
@@ -99,12 +106,11 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
     public void onClick(@NonNull View view){
         TextView nome = view.findViewById(R.id.Name);
         ImageView img = view.findViewById(R.id.imageView);
-
-        String n = nome.getText().toString();
+        TextView idMutante = view.findViewById(R.id.idMutante);
 
         Intent it = new Intent(this, DetalheMutanteActivity.class);
         Bundle params = new Bundle();
-        params.putString("nome", n);
+        params.putInt("id", Integer.parseInt(idMutante.getText().toString()));
         it.putExtras(params);
         startActivity(it);
         finish();

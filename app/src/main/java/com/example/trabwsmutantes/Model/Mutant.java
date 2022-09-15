@@ -1,26 +1,24 @@
 package com.example.trabwsmutantes.Model;
 
-import android.app.Activity;
-
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class Mutant extends Activity implements Serializable {
+public class Mutant {
     @SerializedName("id")
     private int id;
     @SerializedName("name")
     private String name;
     @SerializedName("photo")
     private String photo;
-    //@SerializedName("abilits")
-    //private List<String> abilits;
+    @SerializedName("abilits")
+    private List<String> abilits;
 
     public Mutant(int id, String name, String photo) {
         this.id = id;
         this.name = name;
         this.photo = photo;
-        //this.abilits = abilits;
+        this.abilits = abilits;
     }
 
     public int getId() {
@@ -47,11 +45,11 @@ public class Mutant extends Activity implements Serializable {
         this.photo = photo;
     }
 
-    /*public List<String> getAbilits() {
+    public List<String> getAbilits() {
         return abilits;
     }
 
     public void setAbilits(List<String> abilits) {
         this.abilits = abilits;
-    }*/
+    }
 }

@@ -23,10 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
-        android:layout_marginBottom="23dp"
-        android:text="TextView"
+        android:layout_marginTop="16dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView14"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -34,23 +32,33 @@
         android:id="@+id/habilidade1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="18dp"
-        android:text="TextView"
+        android:layout_marginTop="11dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/habilidade2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.087"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <TextView
+        android:id="@+id/habilidade2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/habilidade1" />
 
     <TextView
         android:id="@+id/habilidade3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="31dp"
-        android:text="TextView"
+        android:layout_marginTop="17dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView15"
-        app:layout_constraintStart_toStartOf="@+id/habilidade2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.087"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habilidade2" />
 
     <TextView
@@ -58,46 +66,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
-        android:layout_marginBottom="102dp"
-        android:text="TextView"
+        android:layout_marginTop="17dp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
-
-    <TextView
-        android:id="@+id/habilidade2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/habilidade3"
-        app:layout_constraintStart_toStartOf="@+id/habilidade1"
-        app:layout_constraintTop_toBottomOf="@+id/habilidade1" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="237dp"
         android:text="Nome do Mutante:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/nome"
-        app:layout_constraintEnd_toEndOf="@+id/nome"
-        app:layout_constraintStart_toEndOf="@+id/nome"
+        app:layout_constraintBottom_toTopOf="@+id/textView15"
+        app:layout_constraintStart_toStartOf="@+id/nome"
         app:layout_constraintTop_toBottomOf="@+id/imgV" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginTop="24dp"
         android:text="Habilidades do Mutante:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/habilidade1"
-        app:layout_constraintStart_toStartOf="@+id/habilidade1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.181"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nome" />
 
     <TextView
@@ -105,18 +100,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="142dp"
         android:text="Mutante Criado por:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/nomeCriador"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintStart_toStartOf="@+id/nomeCriador"
-        app:layout_constraintTop_toBottomOf="@+id/habilidade3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="14dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="25dp"
         android:onClick="voltar"
         android:text="VOLTAR"
@@ -128,20 +123,20 @@
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="3dp"
         android:layout_marginBottom="25dp"
         android:onClick="editarMutante"
         android:text="editar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomeCriador" />
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <Button
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="1dp"
         android:layout_marginBottom="25dp"
         android:onClick="excluirMutante"
         android:text="excluir"

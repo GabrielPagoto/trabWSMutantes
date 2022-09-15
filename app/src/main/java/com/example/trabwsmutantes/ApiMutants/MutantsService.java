@@ -6,10 +6,14 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface MutantsService {
     Call<Mutant> getMutant();
-    @GET("Mutants/{id}")
-    Call<List<Mutant>> getListMutants(@Path("id") int id);
+
+    @GET("Mutants")
+    Call<List<Mutant>> getMutantList(@Query("id") int id);
+
+    @GET("Mutant")
+    Call<Mutant> getMutant(@Query("id") int id);
 }

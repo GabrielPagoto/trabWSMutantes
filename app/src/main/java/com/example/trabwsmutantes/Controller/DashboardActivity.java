@@ -43,6 +43,7 @@ public class DashboardActivity extends AppCompatActivity implements Serializable
 
     public void activityListarTodos(View view){
         Intent it = new Intent(DashboardActivity.this,ListarTodosActivity.class);
+        //Intent it = new Intent(DashboardActivity.this,DetalheMutanteActivity.class);
         startActivity(it);
         finish();
     }

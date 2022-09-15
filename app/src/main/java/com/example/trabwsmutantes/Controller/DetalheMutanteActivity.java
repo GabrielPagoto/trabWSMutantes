@@ -1,23 +1,32 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
+import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
 import java.io.Serializable;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DetalheMutanteActivity extends AppCompatActivity implements Serializable {
     Mutante mutante;
+    static String url = "https://7a3b-2804-7f4-378e-dc86-a49f-d767-d316-473c.sa.ngrok.io/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,52 +41,58 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
         TextView nomeCriador = findViewById(R.id.nomeCriador);
         ImageView img = findViewById(R.id.imgV);
 
+
         if (it != null) {
             Bundle params = it.getExtras();
             if (params != null) {
-                String sNome = params.getString("nome");
+                Call<Mutant> call = new RetrofitConfig().getMutantService().getMutant(params.getInt("id"));
+                call.enqueue(new Callback<Mutant>() {
+                    @Override
+                    public void onResponse(Call<Mutant> call, Response<Mutant> response) {
+                        if (response.code() == 204) {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetalheMutanteActivity.this);
+                            alertDialog.setTitle("Atenção !!");
+                            alertDialog.setMessage("Não existe nenhum Mutante com o ID fornecido (trocar pra nome depois)!");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
 
-                /*
-                 * AQUI FAZER A BUSCA E JOGAR OS DADOS NA TELA, CODIGO ABAIXO FOI CRIADO APENAS PARA TESTES.
-                 * */
+                                }
+                            });
+                            alertDialog.create().show();
+                        } else if (response.code() == 200) {
+                            SharedPreferences sharedPref = getSharedPreferences(
+                                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                            String nomeC = sharedPref.getString("email", "");
+                            Mutant mutant = response.body();
+                            nome.setText(mutant.getName());
+                            habilidade1.setText(mutant.getAbilits().get(0));
+                            if (mutant.getAbilits().size() == 2) {
+                                habilidade2.setText(mutant.getAbilits().get(1));
+                            }
+                            if (mutant.getAbilits().size() == 3) {
+                                habilidade3.setText(mutant.getAbilits().get(2));
+                            }
+                            nomeCriador.setText(nomeC);
+                        } else {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetalheMutanteActivity.this);
+                            alertDialog.setTitle("Erro !!");
+                            alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
 
-                switch (sNome) {
-                    case "Teste 1":
-                        mutante = new Mutante("", sNome, "Habilidade 1");
-                        img.setImageResource(R.drawable.img);
-                        nome.setText(mutante.getNome());
-                        habilidade1.setText("Habilidade 1");
-                        //habilidade2.setText("Habilidade 2");
-                        //habilidade3.setText("Habilidade 3");
-                        break;
-                    case "Teste 2":
-                        mutante = new Mutante(R.drawable.ic_kablam_super_hero_flame, sNome,
-                                "Habilidade 1", "Habilidade 2");
-                        nome.setText(mutante.getNome());
-                        img.setImageResource(R.drawable.ic_kablam_super_hero_flame);
-                        habilidade1.setText("Habilidade 1");
-                        habilidade2.setText("Habilidade 2");
-                        break;
-                    case "Teste 3":
-                        mutante = new Mutante(R.drawable.ic_launcher_background, sNome,
-                                "Habilidade 1", "Habilidade 2", "Habilidade 3");
-                        nome.setText(mutante.getNome());
-                        img.setImageResource(R.drawable.ic_launcher_background);
-                        habilidade1.setText("Habilidade 1");
-                        habilidade2.setText("Habilidade 2");
-                        habilidade3.setText("Habilidade 3");
-                        break;
-                    case "object":
-                        mutante = (Mutante) getIntent().getSerializableExtra("mutante");
-                        nome.setText(mutante.getNome());
-                        //img.setImageResource(mutante.getImg());
-                        habilidade1.setText(mutante.getHabilidade1());
-                        habilidade2.setText(mutante.getHabilidade2());
-                        habilidade3.setText(mutante.getHabilidade3());
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + sNome);
-                }
+                                }
+                            });
+                            alertDialog.create().show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Mutant> call, Throwable t) {
+                        Log.e("erro", t.getMessage());
+                    }
+                });
             }
         }
     }
