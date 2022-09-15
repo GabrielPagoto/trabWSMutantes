@@ -5,6 +5,7 @@ import com.example.trabwsmutantes.Model.Mutant;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -16,4 +17,7 @@ public interface MutantsService {
 
     @GET("Mutant")
     Call<Mutant> getMutant(@Query("id") int id);
+
+    @DELETE("Mutant")
+    Call<Mutant> deleteMutant(@Query("id") int id);
 }
