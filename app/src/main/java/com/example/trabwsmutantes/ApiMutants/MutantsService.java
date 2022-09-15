@@ -9,6 +9,7 @@ import javax.xml.namespace.QName;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -24,6 +25,7 @@ public interface MutantsService {
     @GET("Mutant")
     Call<Mutant> getMutant(@Query("id") int id);
 
+
     @Multipart
     @POST("Mutant")
     Call<String> uploadAttachment(@Part MultipartBody.Part filePart,
@@ -34,4 +36,7 @@ public interface MutantsService {
                           @Part("professorId") RequestBody professorId
 
     );
+
+    @DELETE("Mutant")
+    Call<Mutant> deleteMutant(@Query("id") int id);
 }

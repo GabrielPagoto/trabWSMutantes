@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.trabwsmutantes.Adapter.AdapterMutantes;
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
+import java.io.InputStream;
 import java.io.Serializable;
 
 import retrofit2.Call;
@@ -27,15 +30,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetalheMutanteActivity extends AppCompatActivity implements Serializable {
-    Mutante mutante;
     static String url = "https://d5c7-138-118-169-27.sa.ngrok.io/";
+    Mutant mutant;
+    Intent it;
+    Bundle params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe_mutante);
 
-        Intent it = getIntent();
+        it = getIntent();
         TextView nome = findViewById(R.id.nome);
         TextView habilidade1 = findViewById(R.id.habilidade1);
         TextView habilidade2 = findViewById(R.id.habilidade2);
@@ -45,7 +50,7 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
 
 
         if (it != null) {
-            Bundle params = it.getExtras();
+            params = it.getExtras();
             if (params != null) {
                 Call<Mutant> call = new RetrofitConfig().getMutantService().getMutant(params.getInt("id"));
                 call.enqueue(new Callback<Mutant>() {
@@ -66,10 +71,10 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                             SharedPreferences sharedPref = getSharedPreferences(
                                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                             String nomeC = sharedPref.getString("email", "");
-                            Mutant mutant = response.body();
+                            mutant = response.body();
                             nome.setText(mutant.getName());
                             habilidade1.setText(mutant.getAbilits().get(0));
-                            if (mutant.getAbilits().size() == 2) {
+                            if (mutant.getAbilits().size() >= 2) {
                                 habilidade2.setText(mutant.getAbilits().get(1));
                             }
                             if (mutant.getAbilits().size() == 3) {
@@ -79,9 +84,7 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
                             Bundle bundle = getIntent().getExtras();
                             if (bundle != null) {
                                 try {
-                                    byte[] imageInByte = bundle.getByteArray("bitmap");
-                                    Bitmap bmp = BitmapFactory.decodeByteArray(imageInByte, 0, imageInByte.length);
-                                    img.setImageBitmap(bmp);
+                                    new AdapterMutantes.DownloadImageFromInternet((ImageView) img).execute(url+mutant.getPhoto());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -109,12 +112,34 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
         }
     }
 
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage=BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
     public void editarMutante(View view){
         //Intent intentGo = getIntent();
         //Bundle var = intentGo.getExtras();
         Intent intent = new Intent(DetalheMutanteActivity.this,EditarMutanteActivity.class);
         //Bundle params = new Bundle();
-        intent.putExtra("mutante", mutante);
+        //intent.putExtra("mutante", mutant);
         /*params.putString("nome", var.getString("nome"));
         params.putString("imagem", "ic_kablam_super_hero_flame");
         params.putString("habilidade1", var.getString("nome"));
@@ -128,10 +153,48 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
     public void excluirMutante(View view){
         AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(DetalheMutanteActivity.this);
         selecionaFoto.setTitle("Atenção !!");
-        selecionaFoto.setMessage("Deseja realmente excluir o mutante " + mutante.getNome() + "?");
+        selecionaFoto.setMessage("Deseja realmente excluir o mutante " + mutant.getName() + " ?");
         selecionaFoto.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Call<Mutant> call = new RetrofitConfig().getMutantService().deleteMutant(params.getInt("id"));
+                call.enqueue(new Callback<Mutant>() {
+                    @Override
+                    public void onResponse(Call<Mutant> call, Response<Mutant> response) {
+                        if (response.code() == 204) {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetalheMutanteActivity.this);
+                            alertDialog.setTitle("Atenção !!");
+                            alertDialog.setMessage("Não existe nenhum Mutante com o ID fornecido (trocar pra nome depois)!");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            alertDialog.create().show();
+                        } else if (response.code() == 200) {
+                            Intent intentNova = new Intent(DetalheMutanteActivity.this,ListarTodosActivity.class);
+                            startActivity(intentNova);
+                            finish();
+                        } else {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DetalheMutanteActivity.this);
+                            alertDialog.setTitle("Erro !!");
+                            alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            alertDialog.create().show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Mutant> call, Throwable t) {
+                        Log.e("erro", t.getMessage());
+                    }
+                });
                 Intent it = new Intent(DetalheMutanteActivity.this,ListarTodosActivity.class);
                 startActivity(it);
                 finish();
@@ -143,7 +206,9 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
 
             }
         });
+        System.out.println("CLICOU AQUI!");
         selecionaFoto.create().show();
+
     }
 
     public void voltar(View view){
