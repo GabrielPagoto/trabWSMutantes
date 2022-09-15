@@ -134,20 +134,10 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
     }
 
     public void editarMutante(View view){
-        //Intent intentGo = getIntent();
-        //Bundle var = intentGo.getExtras();
         Intent intentNew = new Intent(DetalheMutanteActivity.this,EditarMutanteActivity.class);
         Bundle paramsNew = new Bundle();
-        //intent.putExtra("mutante", mutant);
-        /*params.putString("nome", var.getString("nome"));
-        params.putString("imagem", "ic_kablam_super_hero_flame");
-        params.putString("habilidade1", var.getString("nome"));
-        params.putString("habilidade2", var.getString("nome"));
-        params.putString("habilidade3", var.getString("nome"));*/
-        //intent.putExtras(params);
         paramsNew.putInt("id", mutant.getId());
         intentNew.putExtras(params);
-        System.out.println("PASSOU O ID: "+ mutant.getId());
         startActivity(intentNew);
         finish();
     }
@@ -208,7 +198,6 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
 
             }
         });
-        System.out.println("CLICOU AQUI!");
         selecionaFoto.create().show();
 
     }

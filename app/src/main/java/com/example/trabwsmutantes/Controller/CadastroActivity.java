@@ -216,7 +216,18 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
                         Intent intentNova = new Intent(CadastroActivity.this, ListarTodosActivity.class);
                         startActivity(intentNova);
                         finish();
-                    } else {
+                    } else if (response.code() == 404) {
+                        AlertDialog.Builder alertDialogErro = new AlertDialog.Builder(CadastroActivity.this);
+                        alertDialogErro.setTitle("Erro !!");
+                        alertDialogErro.setMessage("Já existe um mutante com o nome de: "+ nomeMutante.getText().toString());
+                        alertDialogErro.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        alertDialogErro.create().show();
+                    } else{
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(CadastroActivity.this);
                         alertDialog.setTitle("Erro !!");
                         alertDialog.setMessage("Erro interno, tente novamente mais tarde");

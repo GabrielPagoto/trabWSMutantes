@@ -1,10 +1,9 @@
 package com.example.trabwsmutantes.ApiMutants;
 
+import com.example.trabwsmutantes.Model.Dashboard;
 import com.example.trabwsmutantes.Model.Mutant;
 
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -25,6 +24,8 @@ public interface MutantsService {
     @GET("Mutant")
     Call<Mutant> getMutant(@Query("id") int id);
 
+    @GET("Mutants/Dashboard")
+    Call<Dashboard> getMutantDashboard(@Query("id") int id);
 
     @Multipart
     @POST("Mutant")

@@ -3,7 +3,9 @@ package com.example.trabwsmutantes.Controller;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -17,10 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trabwsmutantes.Adapter.AdapterMutantes;
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutant;
-import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 
 import retrofit2.Call;
@@ -41,6 +45,9 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
     static String url = "https://08b1-2804-7f4-378e-dc86-ed30-ec7c-e28e-1505.sa.ngrok.io/";
     Intent it = getIntent();
     Bundle paramsNew;
+    Bitmap fotoRedimensionada;
+    File imageFileName;
+    String fotoEmString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +117,71 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
                 });
             }
         }
-        /*mutante = (Mutante) getIntent().getSerializableExtra("mutante");
-        //img.setImageResource(mutante.getImg());
-        nome.setText(mutante.getNome());
-        habilidade1.setText(mutante.getHabilidade1());
-        habilidade2.setText(mutante.getHabilidade2());
-        habilidade3.setText(mutante.getHabilidade3());*/
+    }
+
+    public void alterarImagem(View view){
+        AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(EditarMutanteActivity.this);
+        selecionaFoto.setTitle("Origem da foto");
+        selecionaFoto.setMessage("Por favor, selecione a origem da foto");
+        selecionaFoto.setPositiveButton("Galeria", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent,3);
+            }
+        });
+        selecionaFoto.create().show();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent dados) {
+
+        super.onActivityResult(requestCode, resultCode, dados);
+        if(requestCode == 3){
+            if(resultCode == RESULT_OK){
+                try{
+                    Uri imageUri = dados.getData();
+
+                    Bitmap fotoBuscada = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    fotoRedimensionada = Bitmap.createScaledBitmap(fotoBuscada, 256,256, true);
+                    File imageFileFolder = new File(getCacheDir(),"Avatar");
+                    if( !imageFileFolder.exists() ){
+                        imageFileFolder.mkdir();
+                    }
+
+                    FileOutputStream out = null;
+
+                    imageFileName = new File(imageFileFolder, "avatar-" + System.currentTimeMillis() + ".jpg");
+                    try {
+                        out = new FileOutputStream(imageFileName);
+                        fotoBuscada.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                    } catch (IOException e) {
+                        Log.e("img", "Failed to convert image to JPEG", e);
+                    } finally {
+                        try {
+                            if (out != null) {
+                                out.close();
+                            }
+                        } catch (IOException e) {
+                            Log.e("img", "Failed to close output stream", e);
+                        }
+                    }
+                    img.setImageBitmap(fotoRedimensionada);
+                    byte[] fotoEmBytes;
+                    ByteArrayOutputStream streamFotoEmBytes = new ByteArrayOutputStream();
+                    fotoRedimensionada.compress(Bitmap.CompressFormat.PNG, 70, streamFotoEmBytes);
+                    fotoEmBytes = streamFotoEmBytes.toByteArray();
+                    fotoEmString = Base64.encodeToString(fotoEmBytes,Base64.DEFAULT);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } else {
+                img.setImageResource(R.drawable.img);
+                fotoEmString = null;
+            }
+        }
     }
 
     public void realizarAlteracao(View view) {
@@ -125,25 +191,30 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         habilidade2 = findViewById(R.id.habilidade2Mutante);
         habilidade3 = findViewById(R.id.habilidade3Mutante);
 
-        if (img.toString() != null && nome.getText().toString() != null && habilidade1.getText().toString() != null) {
-            Mutante mutanteNovo = new Mutante();
-            //CORRIGIR mutanteNovo.setImg(Integer.parseInt(img.toString()));
-            mutanteNovo.setNome(nome.getText().toString());
-            mutanteNovo.setHabilidade1(habilidade1.getText().toString());
-            if (habilidade2.getText().toString() != null) {
-                mutanteNovo.setHabilidade2(habilidade2.getText().toString());
-            }
-            if (habilidade3.getText().toString() != null) {
-                mutanteNovo.setHabilidade3(habilidade3.getText().toString());
-            }
+        if (img.toString().isEmpty() || nome.getText().toString().isEmpty() || (
+                habilidade1.getText().toString().isEmpty() &&
+                        habilidade2.getText().toString().isEmpty() &&
+                            habilidade3.getText().toString().isEmpty())) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditarMutanteActivity.this);
+            alertDialog.setTitle("Erro !!");
+            alertDialog.setMessage("Você deve preencher no mínimo o Nome, uma Habilidade e informar a Foto do Mutante!");
+            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            alertDialog.create().show();
+
+
+        }
+        else{
             Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
             Bundle params = new Bundle();
-            params.putString("nome", "object");
+            params.putInt("id", mutant.getId());
             intent.putExtras(params);
-            intent.putExtra("mutante", mutanteNovo);
             startActivity(intent);
             finish();
-
         }
 
     }
