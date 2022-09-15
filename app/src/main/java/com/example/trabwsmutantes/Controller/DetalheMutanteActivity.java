@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class DetalheMutanteActivity extends AppCompatActivity implements Serializable {
     Mutante mutante;
-    static String url = "https://7a3b-2804-7f4-378e-dc86-a49f-d767-d316-473c.sa.ngrok.io/";
+    static String url = "https://d5c7-138-118-169-27.sa.ngrok.io/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
