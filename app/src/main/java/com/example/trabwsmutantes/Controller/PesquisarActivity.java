@@ -1,15 +1,15 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.trabwsmutantes.Adapter.AdapterMutantes;
-import com.example.trabwsmutantes.Model.Mutante;
+import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.R;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class PesquisarActivity extends AppCompatActivity implements Serializable {
     private RecyclerView listaMutantes;
-    private List<Mutante> mutanteList = new ArrayList<Mutante>();
+    private List<Mutant> mutanteList = new ArrayList<Mutant>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,15 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.trabwsmutantes.Model.Mutante;
+import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.R;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class AdapterMutantes extends RecyclerView.Adapter<AdapterMutantes.MyViewHolder> implements Serializable {
-    private List<Mutante> mutanteList;
-    public  AdapterMutantes(List<Mutante> list){
+    private List<Mutant> mutanteList;
+    public  AdapterMutantes(List<Mutant> list){
         mutanteList = list;
     }
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -42,8 +42,8 @@ public class AdapterMutantes extends RecyclerView.Adapter<AdapterMutantes.MyView
 
     @Override
     public void onBindViewHolder(@NonNull AdapterMutantes.MyViewHolder holder, int position) {
-        Mutante obj = mutanteList.get(position);
-        holder.name.setText(obj.getNome());
+        Mutant obj = mutanteList.get(position);
+        holder.name.setText(obj.getName());
         //.img.setImageResource(obj.getImg());
     }
 

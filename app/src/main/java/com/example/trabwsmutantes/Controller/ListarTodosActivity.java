@@ -1,31 +1,27 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.trabwsmutantes.Adapter.AdapterMutantes;
-import com.example.trabwsmutantes.Model.Mutante;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.R;
-import com.example.trabwsmutantes.Utils.ItemOffsetDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListarTodosActivity extends AppCompatActivity implements Serializable {
     private RecyclerView listagemMutantes;
-    private List<Mutante> mutanteList = new ArrayList<Mutante>();
+    private List<Mutant> mutanteList = new ArrayList<Mutant>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +29,62 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
         setContentView(R.layout.activity_listar_todos);
 
         listagemMutantes = findViewById(R.id.listaMutantes);
-        this.createMutante();
-        AdapterMutantes adapterMutante = new AdapterMutantes(mutanteList);
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(getApplicationContext());
-        listagemMutantes.setLayoutManager(layoutManager);
-        listagemMutantes.setHasFixedSize(true);
-        listagemMutantes.setAdapter(adapterMutante);
+        //this.createMutante();
+
+
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int idLogado = sharedPref.getInt("id", 0);
+        /*Call<List<Mutant>> call = new RetrofitConfig().getMutantService().getListMutants(idLogado);
+        call.enqueue(new Callback<List<Mutant>>() {
+
+            @Override
+            public void onResponse(Call<List<Mutant>> call, Response<List<Mutant>> response) {
+                if(response.code() == 204)
+                {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(ListarTodosActivity.this);
+                    alertDialog.setTitle("Atenção !!");
+                    alertDialog.setMessage("Você ainda não possui Mutantes cadastrados!");
+                    alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog .create().show();
+                }
+                else if(response.code() == 200){
+                    mutanteList = response.body();
+                    AdapterMutantes adapterMutante = new AdapterMutantes(mutanteList);
+                    RecyclerView.LayoutManager layoutManager =
+                            new LinearLayoutManager(getApplicationContext());
+                    listagemMutantes.setLayoutManager(layoutManager);
+                    listagemMutantes.setHasFixedSize(true);
+                    listagemMutantes.setAdapter(adapterMutante);
+                }
+                else
+                {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(ListarTodosActivity.this);
+                    alertDialog.setTitle("Erro !!");
+                    alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                    alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.create().show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Mutant>> call, Throwable t) {
+                Log.e("erro", t.getMessage());
+            }
+        });
+
+
+*/
     }
 
     private void createMutante() {

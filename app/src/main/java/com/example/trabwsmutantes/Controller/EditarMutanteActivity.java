@@ -1,7 +1,5 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,8 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.trabwsmutantes.ApiMutants.MutantsService;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
+import com.example.trabwsmutantes.Model.Mutant;
 import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
@@ -112,19 +112,19 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
         String image = convertToString();
         String imageName = imgTitle.getText().toString();
 
-        Call<Mutante> call = new RetrofitConfig().getMutantService().getMutante();
+        Call<Mutant> call = new RetrofitConfig().getMutantService().getMutant();
 
-        call.enqueue(new Callback<Mutante>() {
+        call.enqueue(new Callback<Mutant>() {
             @Override
-            public void onResponse(Call<Mutante> call, Response<Mutante> response) {
+            public void onResponse(Call<Mutant> call, Response<Mutant> response) {
 
-                Mutante img_pojo = response.body();
+                Mutant img_pojo = response.body();
                 Log.d("Server Response", "" + img_pojo);
 
             }
 
             @Override
-            public void onFailure(Call<Mutante> call, Throwable t) {
+            public void onFailure(Call<Mutant> call, Throwable t) {
                 Log.d("Server Response", "" + t.toString());
 
             }

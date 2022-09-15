@@ -1,10 +1,12 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trabwsmutantes.R;
 
@@ -19,6 +21,11 @@ public class DashboardActivity extends AppCompatActivity implements Serializable
     }
 
     public void sair(View view){
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.commit();
         finish();
     }
 

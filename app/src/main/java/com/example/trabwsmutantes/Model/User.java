@@ -1,37 +1,37 @@
 package com.example.trabwsmutantes.Model;
 
 public class User {
-    private int Id;
-    private String Email;
-    private  String Password;
+    private int id;
+    private String email;
+    private  String password;
 
     public User(int id, String email, String password) {
-        Id = id;
-        Email = email;
-        Password = password;
+        id = id;
+        email = email;
+        password = password;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        email = email;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        password = password;
     }
 }

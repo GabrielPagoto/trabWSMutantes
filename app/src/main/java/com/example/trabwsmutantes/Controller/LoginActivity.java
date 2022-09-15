@@ -1,20 +1,20 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.User;
 import com.example.trabwsmutantes.R;
-
-import java.io.Console;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,33 +43,40 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.code() == 204)
                     {
-                            AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
-                            selecionaFoto.setTitle("Atenção !!");
-                            selecionaFoto.setMessage("Senha ou email incorretos");
-                            selecionaFoto.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+                            alertDialog.setTitle("Atenção !!");
+                            alertDialog.setMessage("Senha ou email incorretos");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
                                 }
                             });
-                            selecionaFoto.create().show();
+                            alertDialog .create().show();
                     }
                     else if(response.code() == 200){
+                        User usuario = response.body();
+                        SharedPreferences sharedPref = getSharedPreferences(
+                                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("email", usuario.getEmail());
+                        editor.putInt("id", usuario.getId());
+                        editor.commit();
                         startActivity(it);
                         finish();
                     }
                     else
                     {
-                        AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(LoginActivity.this);
-                        selecionaFoto.setTitle("Erro !!");
-                        selecionaFoto.setMessage("Erro interno, tente novamente mais tarde");
-                        selecionaFoto.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+                        alertDialog.setTitle("Erro !!");
+                        alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                        alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
                             }
                         });
-                        selecionaFoto.create().show();
+                        alertDialog.create().show();
                     }
 
                 }

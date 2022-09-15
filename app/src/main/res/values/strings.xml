@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">trabWSMutantes</string>
+    <string name="preference_file_key">com.example.trabwsmutantes.PREFERENCE.FILE.KEY</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
