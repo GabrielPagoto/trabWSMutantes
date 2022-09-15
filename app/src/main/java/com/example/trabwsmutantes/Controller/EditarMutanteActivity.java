@@ -1,7 +1,9 @@
 package com.example.trabwsmutantes.Controller;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +29,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,7 +75,7 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
                         if (response.code() == 204) {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditarMutanteActivity.this);
                             alertDialog.setTitle("Atenção !!");
-                            alertDialog.setMessage("Não existe nenhum Mutante com o ID fornecido (trocar pra nome depois)!");
+                            alertDialog.setMessage("Não existe nenhum Mutante com o nome fornecido!");
                             alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -205,10 +210,71 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
                 }
             });
             alertDialog.create().show();
-
-
         }
         else{
+            SharedPreferences sharedPref = getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            int idLogado = sharedPref.getInt("id", 0);
+            MultipartBody.Part filePart = null;
+
+            if(imageFileName != null){
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFileName);
+                filePart = MultipartBody.Part.createFormData("photo", imageFileName.getName(), requestFile);
+            }
+            RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), nome.getText().toString());
+            RequestBody abilities_one = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade1.getText().toString());
+            RequestBody abilities_two = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade2.getText().toString());
+            RequestBody abilities_tree = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade3.getText().toString());
+            RequestBody professorId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(idLogado));
+            Call<String> call = new RetrofitConfig().getMutantService().
+                    createMutant(paramsNew.getInt("id"),
+                            filePart,
+                            name,
+                            abilities_one,
+                            abilities_two,
+                            abilities_tree,
+                            professorId);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.code() == 200) {
+                        Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
+                        Bundle params = new Bundle();
+                        params.putInt("id", mutant.getId());
+                        intent.putExtras(params);
+                        startActivity(intent);
+                        finish();
+                    } else if (response.code() == 404) {
+                        AlertDialog.Builder alertDialogErro = new AlertDialog.Builder(EditarMutanteActivity.this);
+                        alertDialogErro.setTitle("Erro !!");
+                        alertDialogErro.setMessage("Já existe um mutante com o nome de: "+ nome.getText().toString());
+                        alertDialogErro.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        alertDialogErro.create().show();
+                    } else{
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditarMutanteActivity.this);
+                        alertDialog.setTitle("Erro !!");
+                        alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                        alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        alertDialog.create().show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+
             Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
             Bundle params = new Bundle();
             params.putInt("id", mutant.getId());

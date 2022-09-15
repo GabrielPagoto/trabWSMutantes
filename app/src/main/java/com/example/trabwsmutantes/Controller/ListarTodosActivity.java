@@ -39,8 +39,6 @@ public class ListarTodosActivity extends AppCompatActivity implements Serializab
         setContentView(R.layout.activity_listar_todos);
 
         listagemMutantes = findViewById(R.id.listaMutantes);
-        //this.createMutante();
-
 
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);

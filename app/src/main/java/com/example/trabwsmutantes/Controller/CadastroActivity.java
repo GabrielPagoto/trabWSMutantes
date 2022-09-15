@@ -213,7 +213,7 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     if (response.code() == 200) {
-                        Intent intentNova = new Intent(CadastroActivity.this, ListarTodosActivity.class);
+                        Intent intentNova = new Intent(CadastroActivity.this, DashboardActivity.class);
                         startActivity(intentNova);
                         finish();
                     } else if (response.code() == 404) {
