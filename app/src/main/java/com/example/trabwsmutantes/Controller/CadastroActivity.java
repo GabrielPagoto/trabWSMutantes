@@ -1,9 +1,5 @@
 package com.example.trabwsmutantes.Controller;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +10,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.R;
@@ -181,7 +180,7 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
         RequestBody abilities_one  = RequestBody.create(MediaType.parse("multipart/form-data"), "odio");
         RequestBody abilities_two = RequestBody.create(MediaType.parse("multipart/form-data"),"");
         RequestBody abilities_tree = RequestBody.create(MediaType.parse("multipart/form-data"),"");
-        RequestBody professorId  = RequestBody.create(MediaType.parse("multipart/form-data"),"1");
+        RequestBody professorId  = RequestBody.create(MediaType.parse("multipart/form-data"),"2");
         Call<String> call =  new RetrofitConfig().getMutantService().
                 uploadAttachment(
                 filePart,

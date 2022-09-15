@@ -8,8 +8,7 @@ public class RetrofitConfig {
 
     public RetrofitConfig() {
         this.retorfit  = new Retrofit.Builder().
-        baseUrl("https://d5c7-138-118-169-27.sa.ngrok.io/")
-
+        baseUrl("https://08b1-2804-7f4-378e-dc86-ed30-ec7c-e28e-1505.sa.ngrok.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trabwsmutantes.Adapter.AdapterMutantes;
 import com.example.trabwsmutantes.ApiMutants.RetrofitConfig;
 import com.example.trabwsmutantes.Model.Mutant;
-import com.example.trabwsmutantes.Model.Mutante;
 import com.example.trabwsmutantes.R;
 
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetalheMutanteActivity extends AppCompatActivity implements Serializable {
-    static String url = "https://d5c7-138-118-169-27.sa.ngrok.io/";
+    static String url = "https://08b1-2804-7f4-378e-dc86-ed30-ec7c-e28e-1505.sa.ngrok.io/";
     Mutant mutant;
     Intent it;
     Bundle params;
@@ -137,8 +136,8 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
     public void editarMutante(View view){
         //Intent intentGo = getIntent();
         //Bundle var = intentGo.getExtras();
-        Intent intent = new Intent(DetalheMutanteActivity.this,EditarMutanteActivity.class);
-        //Bundle params = new Bundle();
+        Intent intentNew = new Intent(DetalheMutanteActivity.this,EditarMutanteActivity.class);
+        Bundle paramsNew = new Bundle();
         //intent.putExtra("mutante", mutant);
         /*params.putString("nome", var.getString("nome"));
         params.putString("imagem", "ic_kablam_super_hero_flame");
@@ -146,7 +145,10 @@ public class DetalheMutanteActivity extends AppCompatActivity implements Seriali
         params.putString("habilidade2", var.getString("nome"));
         params.putString("habilidade3", var.getString("nome"));*/
         //intent.putExtras(params);
-        startActivity(intent);
+        paramsNew.putInt("id", mutant.getId());
+        intentNew.putExtras(params);
+        System.out.println("PASSOU O ID: "+ mutant.getId());
+        startActivity(intentNew);
         finish();
     }
 
