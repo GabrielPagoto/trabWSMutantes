@@ -1,7 +1,9 @@
 package com.example.trabwsmutantes.Controller;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +39,10 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
     String fotoEmString; //será usado para jogar no banco
     Bitmap fotoRedimensionada;
     File imageFileName;
+    TextView nomeMutante;
+    TextView habilidade1;
+    TextView habilidade2;
+    TextView habilidade3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,11 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
         setContentView(R.layout.activity_cadastro);
         imgMutante = findViewById(R.id.imageMutante);
         imgMutante.setImageResource(R.drawable.img);
+
+        nomeMutante = findViewById(R.id.nomeMutante);
+        habilidade1 = findViewById(R.id.habilidade1Mutante);
+        habilidade2 = findViewById(R.id.habilidade2Mutante);
+        habilidade3 = findViewById(R.id.habilidade3Mutante);
     }
 
     public void attFotoMutante(View view){
@@ -162,46 +174,72 @@ public class CadastroActivity extends AppCompatActivity implements Serializable 
     }
 
     public void realizarCadastro(View view){
-       /* AlertDialog.Builder selecionaFoto = new AlertDialog.Builder(CadastroActivity.this);
-        selecionaFoto.setTitle("Atenção !!");
-        selecionaFoto.setMessage("Utilizar aqui uma mensagem informando se foi possível cadastrar o mutante.");
-        selecionaFoto.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent it = new Intent(CadastroActivity.this,DashboardActivity.class);
-                startActivity(it);
-                finish();
-            }
-        });
-        selecionaFoto.create().show();*/
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFileName);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("photo", imageFileName.getName(), requestFile);
-        RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"),"Macaco" + System.currentTimeMillis());
-        RequestBody abilities_one  = RequestBody.create(MediaType.parse("multipart/form-data"), "odio");
-        RequestBody abilities_two = RequestBody.create(MediaType.parse("multipart/form-data"),"");
-        RequestBody abilities_tree = RequestBody.create(MediaType.parse("multipart/form-data"),"");
-        RequestBody professorId  = RequestBody.create(MediaType.parse("multipart/form-data"),"2");
-        Call<String> call =  new RetrofitConfig().getMutantService().
-                uploadAttachment(
-                filePart,
-                name,
-                abilities_one,
-                abilities_two,
-                abilities_tree,
-                professorId);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.isSuccessful()){
-                    System.out.println("subiu");
-                }
-            }
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int idLogado = sharedPref.getInt("id", 0);
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
+        if(nomeMutante.getText().toString().isEmpty() || imageFileName == null ||
+                (habilidade1.getText().toString().isEmpty() &&
+                    habilidade2.getText().toString().isEmpty() &&
+                        habilidade3.getText().toString().isEmpty())){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(CadastroActivity.this);
+            alertDialog.setTitle("Erro !!");
+            alertDialog.setMessage("Você deve preencher no mínimo o Nome, uma Habilidade e informar a Foto do Mutante!");
+            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            alertDialog.create().show();
+        }
+        else {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFileName);
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("photo", imageFileName.getName(), requestFile);
+            RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), nomeMutante.getText().toString());
+            RequestBody abilities_one = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade1.getText().toString());
+            RequestBody abilities_two = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade2.getText().toString());
+            RequestBody abilities_tree = RequestBody.create(MediaType.parse("multipart/form-data"), habilidade3.getText().toString());
+            RequestBody professorId = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(idLogado));
+            Call<String> call = new RetrofitConfig().getMutantService().
+                    uploadAttachment(
+                            filePart,
+                            name,
+                            abilities_one,
+                            abilities_two,
+                            abilities_tree,
+                            professorId);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.code() == 200) {
+                        Intent intentNova = new Intent(CadastroActivity.this, ListarTodosActivity.class);
+                        startActivity(intentNova);
+                        finish();
+                    } else {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CadastroActivity.this);
+                        alertDialog.setTitle("Erro !!");
+                        alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                        alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        alertDialog.create().show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    System.out.println(t.getMessage());
+                }
+            });
+            Intent it = new Intent(CadastroActivity.this, DashboardActivity.class);
+            startActivity(it);
+            finish();
+        }
     }
 
     public void voltar(View view){
