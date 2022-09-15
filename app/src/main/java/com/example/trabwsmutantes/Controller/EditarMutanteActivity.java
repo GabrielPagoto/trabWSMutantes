@@ -237,28 +237,42 @@ public class EditarMutanteActivity extends AppCompatActivity implements Serializ
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.code() == 200) {
-                        Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
-                        Bundle params = new Bundle();
-                        params.putInt("id", mutant.getId());
-                        intent.putExtras(params);
-                        startActivity(intent);
-                        finish();
-                    } else if (response.code() == 404) {
-                        AlertDialog.Builder alertDialogErro = new AlertDialog.Builder(EditarMutanteActivity.this);
-                        alertDialogErro.setTitle("Erro !!");
-                        alertDialogErro.setMessage("Já existe um mutante com o nome de: "+ nome.getText().toString());
-                        alertDialogErro.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                    if(response.isSuccessful()) {
+                        if (response.code() == 200) {
+                            Intent intent = new Intent(EditarMutanteActivity.this, DetalheMutanteActivity.class);
+                            Bundle params = new Bundle();
+                            params.putInt("id", mutant.getId());
+                            intent.putExtras(params);
+                            startActivity(intent);
+                            finish();
+                        } else if (response.code() == 404) {
+                            AlertDialog.Builder alertDialogErro = new AlertDialog.Builder(EditarMutanteActivity.this);
+                            alertDialogErro.setTitle("Erro !!");
+                            alertDialogErro.setMessage("Já existe um mutante com o nome de: " + nome.getText().toString());
+                            alertDialogErro.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
 
-                            }
-                        });
-                        alertDialogErro.create().show();
-                    } else{
+                                }
+                            });
+                            alertDialogErro.create().show();
+                        } else {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditarMutanteActivity.this);
+                            alertDialog.setTitle("Erro !!");
+                            alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                            alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            alertDialog.create().show();
+                        }
+                    }
+                    else{
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditarMutanteActivity.this);
                         alertDialog.setTitle("Erro !!");
-                        alertDialog.setMessage("Erro interno, tente novamente mais tarde");
+                        alertDialog.setMessage("Já existe um mutante com o nome de: " + nome.getText().toString());
                         alertDialog.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
